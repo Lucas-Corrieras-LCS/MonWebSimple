@@ -83,10 +83,10 @@ export function Overlay() {
         alt="Logo"
         style={{
           position: "absolute",
-          top: 20,
-          left: 20,
-          width: 110,
-          height: 110,
+          top: 30,
+          left: 35,
+          width: 70,
+          height: 70,
           filter: "grayscale(1) brightness(0)",
         }}
       />
