@@ -1,5 +1,5 @@
-@import url('https://rsms.me/inter/inter.css');
-@import url('https://fonts.googleapis.com/css2?family=Major+Mono+Display&display=swap');
+@import url("https://rsms.me/inter/inter.css");
+@import url("https://fonts.googleapis.com/css2?family=Major+Mono+Display&display=swap");
 
 * {
   box-sizing: border-box;
@@ -15,7 +15,7 @@ body,
 }
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   background: #d0d0d0;
 }
 
@@ -92,7 +92,7 @@ li {
 
 .price {
   display: inline-block;
-  font-family: 'Major Mono Display', monospace;
+  font-family: "Major Mono Display", monospace;
   background: black;
   color: white;
   padding: 5px 10px;
@@ -100,7 +100,7 @@ li {
 }
 
 .info h1 {
-  font-family: 'Major Mono Display', monospace;
+  font-family: "Major Mono Display", monospace;
   font-size: 2em;
   margin-bottom: 0.5em;
 }
@@ -118,4 +118,61 @@ li {
   font-size: 1.15em;
   letter-spacing: -1px;
   margin: 10px 0;
+}
+
+.overlay-blur {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 10;
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+}
+
+.overlay-blur.open {
+  pointer-events: auto;
+  opacity: 1;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    backdrop-filter 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.menu-link {
+  bottom: 8rem;
+  color: #111;
+  background: transparent;
+  text-align: left;
+  display: block;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-size: 22px;
+  font-weight: 300;
+  font-family: "Inter", sans-serif;
+  text-decoration: none;
+  transition: background 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.menu-link:hover,
+.menu-link:focus {
+  color: #fff;
+  background: linear-gradient(90deg, #111 0%, #333 100%);
+  box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.1), 0 1.5px 6px 0 rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px) scale(1.03);
+}
+
+.menu-link + .menu-link {
+  margin-top: 18px;
 }

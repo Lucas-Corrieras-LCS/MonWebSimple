@@ -15,7 +15,14 @@ const container = {
 
 const item = {
   hidden: { opacity: 0, y: "100%" },
-  show: { opacity: 1, y: 0 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.7,
+      ease: "easeInOut",
+    },
+  },
 };
 
 function List({ children, open }) {
@@ -24,9 +31,10 @@ function List({ children, open }) {
       variants={container}
       initial="hidden"
       animate={open ? "show" : "hidden"}
+      style={{ willChange: "transform, opacity" }}
     >
       {Children.map(children, (child, i) => (
-        <li key={i}>
+        <li key={i} style={{ willChange: "transform, opacity" }}>
           <motion.div variants={item}>{child}</motion.div>
         </li>
       ))}
@@ -47,12 +55,25 @@ export function Overlay() {
   return (
     <>
       <div
+        className={`overlay-blur${store.open ? " open" : ""}`}
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100vw",
+          height: "100vh",
+          zIndex: 10,
+          pointerEvents: store.open ? "auto" : "none",
+        }}
+      />
+      <div
         style={{
           position: "absolute",
           top: 0,
           left: 0,
           width: "100%",
           height: "100%",
+          zIndex: 20,
         }}
       >
         <a
@@ -63,9 +84,9 @@ export function Overlay() {
             fontSize: "13px",
           }}
         >
-          Brandon VO
+          BRV
           <br />
-          Lucas CORRIERAS
+          LCS
         </a>
         <div
           style={{
@@ -88,6 +109,7 @@ export function Overlay() {
           width: 70,
           height: 70,
           filter: "grayscale(1) brightness(0)",
+          zIndex: 30,
         }}
       />
       <div
@@ -98,9 +120,17 @@ export function Overlay() {
           left: "50%",
           transform: "translate(-50%, -50%)",
           color: "white",
+          zIndex: 40,
         }}
       >
-        <h1 className="accent">Monwebsimple</h1>
+        <motion.h1
+          className="accent"
+          initial={{ opacity: 1 }}
+          animate={{ opacity: [1, 0.2, 1] }}
+          transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
+        >
+          Monwebsimple
+        </motion.h1>
         <List open={store.open}>
           <h3>Qui sommes</h3>
           <h3>nous?</h3>

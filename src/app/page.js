@@ -11,19 +11,29 @@ import * as THREE from "three";
 import { easing } from "maath";
 import { Overlay } from "./Overlay";
 import { useStore } from "./store";
+import { Menu } from "./menu";
+import { Button } from "./media";
 
-function MyModel(props) {
+function MyModel({ cursor, ...props }) {
   const ref = useRef();
   const { scene } = useGLTF("/model.gltf");
+  const store = useStore();
   useFrame((state, delta) => {
-    const t = state.clock.getElapsedTime();
     if (ref.current) {
-      ref.current.rotation.set(
-        Math.cos(t / 4) / 8,
-        Math.sin(t / 3) / 4,
-        0.15 + Math.sin(t / 2) / 8
-      );
-      ref.current.position.y = (0.5 + Math.cos(t / 2)) / 7;
+      const t = state.clock.getElapsedTime();
+      const baseX = Math.cos(t / 4) / 8;
+      const baseY = Math.sin(t / 3) / 4;
+      const baseZ = 0.15 + Math.sin(t / 2) / 8;
+      let rotX = baseX;
+      let rotY = baseY;
+      let rotZ = baseZ;
+      let posY = (0.5 + Math.cos(t / 2)) / 7;
+      if (!store.open && cursor) {
+        rotY += cursor.x * 0.8;
+        posY = (0.5 + Math.cos(t / 2)) / 7;
+      }
+      ref.current.rotation.set(rotX, rotY, rotZ);
+      ref.current.position.y = posY;
     }
   });
   return (
@@ -91,10 +101,24 @@ useGLTF.preload("/model.gltf");
 export default function Page() {
   const containerRef = useRef();
   const [eventSource, setEventSource] = useState();
+  const [cursor, setCursor] = useState(null);
 
   useEffect(() => {
     if (containerRef.current) {
       setEventSource(containerRef.current);
+      const handleMove = (e) => {
+        const rect = containerRef.current.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        const y = -(((e.clientY - rect.top) / rect.height) * 2 - 1);
+        setCursor({ x, y });
+      };
+      const handleLeave = () => setCursor(null);
+      containerRef.current.addEventListener("pointermove", handleMove);
+      containerRef.current.addEventListener("pointerleave", handleLeave);
+      return () => {
+        containerRef.current.removeEventListener("pointermove", handleMove);
+        containerRef.current.removeEventListener("pointerleave", handleLeave);
+      };
     }
   }, []);
 
@@ -110,6 +134,7 @@ export default function Page() {
         left: 0,
       }}
     >
+      <Menu />
       <Canvas
         eventSource={eventSource}
         eventPrefix="client"
@@ -138,10 +163,23 @@ export default function Page() {
           far={0.8}
         />
         <Selector>
-          <MyModel rotation={[0.3, Math.PI / 1.6, 0]} />
+          <MyModel rotation={[0.3, Math.PI / 1.6, 0]} cursor={cursor} />
         </Selector>
       </Canvas>
       <Overlay />
+      <div
+        style={{
+          position: "fixed",
+          bottom: 40,
+          left: "50%",
+          transform: "translateX(-50%)",
+          zIndex: 1000, 
+          pointerEvents: "auto", 
+          width: "auto"
+        }}
+      >
+        <Button />
+      </div>
     </div>
   );
 }
